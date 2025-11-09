@@ -4,6 +4,7 @@ set -Eeuo pipefail
 # Extended Storage Configuration
 : "${EXT_STORAGE:=""}"
 : "${EXT_STORAGE_SIZE:="8G"}"
+: "${EXT_STORAGE_BOOT:="N"}"
 
 configureExtendedStorage() {
 
@@ -44,7 +45,16 @@ configureExtendedStorage() {
   # Add the extended storage as a USB storage device
   # Using usb-storage makes it appear as removable media in Windows
   ARGS="${ARGS:+$ARGS }-drive file=$EXT_STORAGE_FILE,if=none,id=usbstick,format=raw,cache=writeback"
-  ARGS="$ARGS -device usb-storage,drive=usbstick,removable=on"
+  
+  # Add bootindex if boot is enabled (lower number = higher priority)
+  # bootindex=1 makes it the first boot device, higher numbers boot after main disk
+  if [[ "${EXT_STORAGE_BOOT,,}" == "y" ]]; then
+    ARGS="$ARGS -device usb-storage,drive=usbstick,removable=on,bootindex=1"
+    local msg="Extended storage configured as bootable device (bootindex=1)"
+    info "$msg" && html "$msg"
+  else
+    ARGS="$ARGS -device usb-storage,drive=usbstick,removable=on"
+  fi
   
   return 0
 }
