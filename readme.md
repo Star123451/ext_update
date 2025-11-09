@@ -19,7 +19,6 @@ Windows inside a Docker container.
  - ISO downloader
  - KVM acceleration
  - Web-based viewer
- - Extended storage (8GB USB-like removable media)
 
 ## Video 📺
 
@@ -158,28 +157,6 @@ kubectl apply -f https://raw.githubusercontent.com/dockur/windows/refs/heads/mas
   ```
 
   Replace the example path `./example` with your desired shared folder, which then will become visible as `Shared`.
-
-### How do I enable extended storage?
-
-  An 8GB extended storage disk can be enabled that appears as removable USB media in Windows. This storage persists across container restarts and Windows version changes.
-
-  To enable it, add the `EXT_STORAGE` environment variable to your compose file:
-
-  ```yaml
-  environment:
-    EXT_STORAGE: "Y"
-  ```
-
-  The storage will appear as a removable drive in Windows and can be accessed by anyone connecting via web browser or RDP. The default size is 8GB, but you can customize it:
-
-  ```yaml
-  environment:
-    EXT_STORAGE: "Y"
-    EXT_STORAGE_SIZE: "16G"
-  ```
-
-> [!TIP]
-> The extended storage is stored in the mounted `/storage` volume and persists even when installing different Windows versions.
 
 ### How do I change the amount of CPU or RAM?
 
